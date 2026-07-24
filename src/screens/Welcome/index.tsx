@@ -4,11 +4,13 @@ import Text from '../../components/Text';
 import Button from '../../components/Button';
 import Styled from './styles';
 import { useTheme } from 'styled-components/native';
+import { useNavigation } from '@react-navigation/native';
 
 import cloudAndThunder from '../../assets/cloud-and-thunder.png';
 
 const Welcome = () => {
   const theme = useTheme();
+  const navigation = useNavigation<any>();
 
   return (
     <Styled.Container>
@@ -42,7 +44,7 @@ const Welcome = () => {
         borderColor={theme.colors.gray[500]}
         borderRadius={16}
         height={56}
-        onPress={() => console.log('Iniciar')}
+        onPress={() => navigation.navigate('Home')}
       >
         <Text
           fontFamily={theme.fonts.family.regular}

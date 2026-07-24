@@ -3,7 +3,7 @@ import { useFonts, Overpass_400Regular, Overpass_600SemiBold, Overpass_700Bold }
 import { ThemeProvider } from 'styled-components/native';
 
 import theme from './src/theme';
-import Welcome from './src/screens/Welcome';
+import { Routes } from './src/routes';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -19,7 +19,7 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <StatusBar style="light" backgroundColor="transparent" translucent />
-      <Welcome />
+      <Routes />
     </ThemeProvider>
   );
 }
