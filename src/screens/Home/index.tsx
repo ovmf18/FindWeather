@@ -3,6 +3,7 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 
 import Text from '../../components/Text';
 import Divider from '../../components/Divider';
@@ -19,6 +20,7 @@ import sunImg from '../../assets/sun.png';
 
 const Home = () => {
   const theme = useTheme();
+  const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
   // Estado para alternar entre a visão vazia e a preenchida para o desafio do Dia 3
   const [hasSelectedCity, setHasSelectedCity] = useState(false);
@@ -38,14 +40,8 @@ const Home = () => {
         style={{ width: 280, height: 280, marginVertical: 48, resizeMode: 'contain' }}
       />
 
-      <TouchableOpacity onPress={() => setHasSelectedCity(true)}>
-        <Text
-          fontFamily={theme.fonts.family.regular}
-          fontSize={16}
-          color={theme.colors.gray[200]}
-          align="center"
-          style={{ textDecorationLine: 'underline', lineHeight: 24 }}
-        >
+      <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+        <Text fontFamily={theme.fonts.family.regular} fontSize={16} color={theme.colors.gray[300]} style={{ textDecorationLine: 'underline', marginTop: 16 }} align="center">
           Selecione aqui um local e{'\n'}encontre o clima em tempo real
         </Text>
       </TouchableOpacity>
@@ -137,10 +133,10 @@ const Home = () => {
           <Feather name="home" size={20} color={theme.colors.white} style={{ marginRight: 8 }} />
           <Text fontFamily={theme.fonts.family.bold} fontSize={14} color={theme.colors.white}>Home</Text>
         </Styled.TabItem>
-        <Styled.TabItem>
+        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 32 }} onPress={() => navigation.navigate('Search')}>
           <Feather name="search" size={20} color={theme.colors.gray[400]} style={{ marginRight: 8 }} />
           <Text fontFamily={theme.fonts.family.regular} fontSize={14} color={theme.colors.gray[400]}>Buscar</Text>
-        </Styled.TabItem>
+        </TouchableOpacity>
       </Styled.BottomTab>
     </Styled.Container>
   );
