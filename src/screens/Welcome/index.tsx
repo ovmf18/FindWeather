@@ -5,12 +5,18 @@ import Button from '../../components/Button';
 import Styled from './styles';
 import { useTheme } from 'styled-components/native';
 import { useNavigation } from '@react-navigation/native';
+import { storage, WELCOME_KEY } from '../../utils/storage';
 
 import cloudAndThunder from '../../assets/cloud-and-thunder.png';
 
 const Welcome = () => {
   const theme = useTheme();
   const navigation = useNavigation<any>();
+
+  const handleStart = async () => {
+    await storage.setItem(WELCOME_KEY, 'true');
+    navigation.navigate('Home');
+  };
 
   return (
     <Styled.Container>
@@ -44,7 +50,7 @@ const Welcome = () => {
         borderColor={theme.colors.gray[500]}
         borderRadius={16}
         height={56}
-        onPress={() => navigation.navigate('Home')}
+        onPress={handleStart}
       >
         <Text
           fontFamily={theme.fonts.family.regular}

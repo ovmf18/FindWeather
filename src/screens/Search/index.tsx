@@ -9,6 +9,7 @@ import Text from '../../components/Text';
 import { Input } from '../../components/Input';
 import { CityCard } from '../../components/CityCard';
 import { FindWeatherAPI } from '../../services/FindWeatherAPI';
+import { storage, CITY_KEY } from '../../utils/storage';
 import * as Styled from './styles';
 
 import notFoundImg from '../../assets/not-found-destination.png';
@@ -76,7 +77,10 @@ const Search = () => {
             city={result.location.name}
             country={result.location.country}
             icon={{ uri: 'https:' + result.current.condition.icon }} 
-            onPress={() => {}}
+            onPress={async () => {
+              await storage.setItem(CITY_KEY, result.location.name);
+              navigation.navigate('Home');
+            }}
           />
         )}
 
