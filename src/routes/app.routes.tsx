@@ -3,6 +3,7 @@ import { View, ActivityIndicator } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Welcome from '../screens/Welcome';
+import NextDays from '../screens/NextDays';
 import { TabRoutes } from './tab.routes';
 import { storage, WELCOME_KEY } from '../utils/storage';
 
@@ -35,6 +36,7 @@ export const AppRoutes = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={initialRoute as any}>
       <Stack.Screen name="Welcome" component={Welcome} />
       <Stack.Screen name="Main" component={TabRoutes} />
+      <Stack.Screen name="NextDays" component={NextDays} />
     </Stack.Navigator>
   );
 };

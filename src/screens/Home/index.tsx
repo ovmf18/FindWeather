@@ -153,7 +153,9 @@ const Home = () => {
 
       <Styled.ForecastHeader>
         <Text fontFamily={theme.fonts.family.regular} fontSize={16} color={theme.colors.white}>Hoje</Text>
-        <Text fontFamily={theme.fonts.family.regular} fontSize={14} color={theme.colors.gray[300]}>Próximos 5 dias {'>'}</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('NextDays', { weatherData })}>
+          <Text fontFamily={theme.fonts.family.regular} fontSize={14} color={theme.colors.gray[300]}>Próximos 5 dias {'>'}</Text>
+        </TouchableOpacity>
       </Styled.ForecastHeader>
 
       <Styled.ForecastList>
