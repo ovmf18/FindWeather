@@ -3,8 +3,7 @@ import { View, ActivityIndicator } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Welcome from '../screens/Welcome';
-import Home from '../screens/Home';
-import Search from '../screens/Search';
+import { TabRoutes } from './tab.routes';
 import { storage, WELCOME_KEY } from '../utils/storage';
 
 const Stack = createNativeStackNavigator();
@@ -16,7 +15,7 @@ export const AppRoutes = () => {
     const checkWelcome = async () => {
       const hasSeenWelcome = await storage.getItem(WELCOME_KEY);
       if (hasSeenWelcome === 'true') {
-        setInitialRoute('Home');
+        setInitialRoute('Main');
       } else {
         setInitialRoute('Welcome');
       }
@@ -35,8 +34,7 @@ export const AppRoutes = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={initialRoute as any}>
       <Stack.Screen name="Welcome" component={Welcome} />
-      <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="Search" component={Search} />
+      <Stack.Screen name="Main" component={TabRoutes} />
     </Stack.Navigator>
   );
 };

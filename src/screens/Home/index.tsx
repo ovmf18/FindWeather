@@ -11,40 +11,11 @@ import { FindWeatherAPI } from '../../services/FindWeatherAPI';
 import { storage, CITY_KEY } from '../../utils/storage';
 import * as Styled from './styles';
 
-import climateChangeImg from '../../assets/climate-change.png';
-import rainingImg from '../../assets/raining.png';
+import { getWeatherIcon } from '../../utils/weatherIcons';
 import dropMiniatureImg from '../../assets/drop-miniature.png';
 import windMiniatureImg from '../../assets/wind-miniature.png';
 import rainingCloudMiniatureImg from '../../assets/raining-cloud-miniature.png';
-import heavyRainingImg from '../../assets/heavy-raining.png';
-import cloudImg from '../../assets/cloud.png';
-import sunImg from '../../assets/sun.png';
-import nightImg from '../../assets/night.png';
-import thunderImg from '../../assets/thunder.png';
-import snowImg from '../../assets/snow.png';
-import lightRainImg from '../../assets/light-rain.png';
-
-export const getWeatherImage = (condition: string, isDay: number) => {
-  const text = condition.toLowerCase();
-  
-  if (text.includes('chuva') || text.includes('chuvisco') || text.includes('chuvoso')) {
-    if (text.includes('forte') || text.includes('pesada')) return heavyRainingImg;
-    if (text.includes('leve') || text.includes('fraca')) return lightRainImg;
-    return rainingImg;
-  }
-  if (text.includes('neve') || text.includes('nevasca') || text.includes('gelo')) return snowImg;
-  if (text.includes('trovoada') || text.includes('tempestade')) return thunderImg;
-  
-  if (text.includes('nublado') || text.includes('encoberto') || text.includes('nuvem') || text.includes('nuvens')) {
-    return cloudImg;
-  }
-  
-  if (text.includes('sol') || text.includes('limpo') || text.includes('claro')) {
-    return isDay ? sunImg : nightImg;
-  }
-  
-  return isDay ? cloudImg : nightImg;
-};
+import climateChangeImg from '../../assets/climate-change.png';
 
 const Home = () => {
   const theme = useTheme();
@@ -125,8 +96,9 @@ const Home = () => {
   const renderFilledState = () => {
     if (!weatherData) return null;
 
-    const current = weatherData.current;
-    const location = weatherData.location;
+    const current = weatherData.list[0];
+    const location = weatherData.city;
+    const forecastItems = weatherData.list.slice(0, 4);
 
     return (
       <Styled.FilledContent>
@@ -146,15 +118,15 @@ const Home = () => {
         </Styled.LocationContainer>
 
         <Styled.WeatherInfo>
-          <Image source={getWeatherImage(current.condition.text, current.is_day)} style={{ width: 180, height: 180, resizeMode: 'contain', marginVertical: 20 }} />
+          <Image source={getWeatherIcon(current.weather[0].description, current.sys.pod === 'd')} style={{ width: 180, height: 180, resizeMode: 'contain', marginVertical: 20 }} />
           <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginTop: 4 }}>
-            <Styled.TempText>{Math.round(current.temp_c)}</Styled.TempText>
+            <Styled.TempText>{Math.round(current.main.temp)}</Styled.TempText>
             <Text fontFamily={theme.fonts.family.bold} fontSize={theme.fonts.size.xl} color={theme.colors.white} style={{ marginTop: 8 }}>
               °
             </Text>
           </View>
-          <Text fontFamily={theme.fonts.family.regular} fontSize={theme.fonts.size.lg} color={theme.colors.white} style={{ textAlign: 'center' }}>
-            {current.condition.text}
+          <Text fontFamily={theme.fonts.family.regular} fontSize={theme.fonts.size.lg} color={theme.colors.white} style={{ textAlign: 'center', textTransform: 'capitalize' }}>
+            {current.weather[0].description}
           </Text>
         </Styled.WeatherInfo>
 
@@ -162,19 +134,19 @@ const Home = () => {
           <Styled.DetailItem>
             <Image source={dropMiniatureImg} style={{ width: 24, height: 24, resizeMode: 'contain' }} />
             <Divider height={8} />
-            <Text fontFamily={theme.fonts.family.bold} fontSize={14} color={theme.colors.white}>{current.humidity}%</Text>
+            <Text fontFamily={theme.fonts.family.bold} fontSize={14} color={theme.colors.white}>{current.main.humidity}%</Text>
             <Text fontFamily={theme.fonts.family.regular} fontSize={12} color={theme.colors.gray[400]}>Umidade</Text>
           </Styled.DetailItem>
           <Styled.DetailItem>
             <Image source={windMiniatureImg} style={{ width: 24, height: 24, resizeMode: 'contain' }} />
             <Divider height={8} />
-            <Text fontFamily={theme.fonts.family.bold} fontSize={14} color={theme.colors.white}>{current.wind_kph}km/h</Text>
+            <Text fontFamily={theme.fonts.family.bold} fontSize={14} color={theme.colors.white}>{Math.round(current.wind.speed * 3.6)}km/h</Text>
             <Text fontFamily={theme.fonts.family.regular} fontSize={12} color={theme.colors.gray[400]}>Veloc. Vento</Text>
           </Styled.DetailItem>
           <Styled.DetailItem>
             <Image source={rainingCloudMiniatureImg} style={{ width: 24, height: 24, resizeMode: 'contain' }} />
             <Divider height={8} />
-            <Text fontFamily={theme.fonts.family.bold} fontSize={14} color={theme.colors.white}>{current.cloud}%</Text>
+            <Text fontFamily={theme.fonts.family.bold} fontSize={14} color={theme.colors.white}>{current.clouds.all}%</Text>
             <Text fontFamily={theme.fonts.family.regular} fontSize={12} color={theme.colors.gray[400]}>Nuvens</Text>
           </Styled.DetailItem>
         </Styled.DetailsCard>
@@ -185,20 +157,18 @@ const Home = () => {
       </Styled.ForecastHeader>
 
       <Styled.ForecastList>
-        {[
-          { time: '09:00', temp: '23°', icon: heavyRainingImg },
-          { time: '13:00', temp: '18°', icon: cloudImg },
-          { time: '17:00', temp: '8°', icon: sunImg },
-          { time: '23:00', temp: '28°', icon: rainingImg },
-        ].map((item, index) => (
-          <Styled.ForecastCard key={index}>
-            <Text fontFamily={theme.fonts.family.bold} fontSize={16} color={theme.colors.white}>{item.temp}</Text>
-            <Divider height={12} />
-            <Image source={item.icon} style={{ width: 44, height: 44, resizeMode: 'contain' }} />
-            <Divider height={12} />
-            <Text fontFamily={theme.fonts.family.regular} fontSize={12} color={theme.colors.gray[300]}>{item.time}</Text>
-          </Styled.ForecastCard>
-        ))}
+        {forecastItems.map((item: any, index: number) => {
+          const time = new Date(item.dt * 1000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+          return (
+            <Styled.ForecastCard key={index}>
+              <Text fontFamily={theme.fonts.family.bold} fontSize={16} color={theme.colors.white}>{Math.round(item.main.temp)}°</Text>
+              <Divider height={12} />
+              <Image source={getWeatherIcon(item.weather[0].description, item.sys.pod === 'd')} style={{ width: 44, height: 44, resizeMode: 'contain' }} />
+              <Divider height={12} />
+              <Text fontFamily={theme.fonts.family.regular} fontSize={12} color={theme.colors.gray[300]}>{time}</Text>
+            </Styled.ForecastCard>
+          );
+        })}
       </Styled.ForecastList>
       </Styled.FilledContent>
     );
@@ -214,17 +184,7 @@ const Home = () => {
         hasSelectedCity ? renderFilledState() : renderEmptyState()
       )}
 
-      {/* Fake Bottom Tab */}
-      <Styled.BottomTab style={{ paddingBottom: insets.bottom > 0 ? insets.bottom : 24 }}>
-        <Styled.TabItem>
-          <Feather name="home" size={20} color={theme.colors.white} style={{ marginRight: 8 }} />
-          <Text fontFamily={theme.fonts.family.bold} fontSize={14} color={theme.colors.white}>Home</Text>
-        </Styled.TabItem>
-        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 32 }} onPress={() => navigation.navigate('Search')}>
-          <Feather name="search" size={20} color={theme.colors.gray[400]} style={{ marginRight: 8 }} />
-          <Text fontFamily={theme.fonts.family.regular} fontSize={14} color={theme.colors.gray[400]}>Buscar</Text>
-        </TouchableOpacity>
-      </Styled.BottomTab>
+
     </Styled.Container>
   );
 };

@@ -15,7 +15,7 @@ const Welcome = () => {
 
   const handleStart = async () => {
     await storage.setItem(WELCOME_KEY, 'true');
-    navigation.navigate('Home');
+    navigation.navigate('Main');
   };
 
   return (

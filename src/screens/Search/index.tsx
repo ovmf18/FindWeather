@@ -13,6 +13,7 @@ import { storage, CITY_KEY } from '../../utils/storage';
 import * as Styled from './styles';
 
 import notFoundImg from '../../assets/not-found-destination.png';
+import { getWeatherIcon } from '../../utils/weatherIcons';
 
 const Search = () => {
   const theme = useTheme();
@@ -72,14 +73,14 @@ const Search = () => {
 
         {result && !error && !loading && (
           <CityCard 
-            temperature={Math.round(result.current.temp_c).toString()}
-            condition={result.current.condition.text}
-            city={result.location.name}
-            country={result.location.country}
-            icon={{ uri: 'https:' + result.current.condition.icon }} 
+            temperature={Math.round(result.list[0].main.temp).toString()}
+            condition={result.list[0].weather[0].description}
+            city={result.city.name}
+            country={result.city.country}
+            icon={getWeatherIcon(result.list[0].weather[0].description, result.list[0].sys.pod === 'd')} 
             onPress={async () => {
-              await storage.setItem(CITY_KEY, result.location.name);
-              navigation.navigate('Home');
+              await storage.setItem(CITY_KEY, result.city.name);
+              navigation.navigate('HomeTab');
             }}
           />
         )}
@@ -97,21 +98,7 @@ const Search = () => {
         )}
       </Styled.Content>
 
-      {/* Fake Bottom Tab */}
-      <View style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, paddingBottom: insets.bottom > 0 ? insets.bottom : 24,
-        paddingTop: 20, flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
-        backgroundColor: theme.colors.dark[500], borderTopWidth: 1, borderTopColor: theme.colors.dark[400]
-      }}>
-        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 32 }} onPress={() => navigation.navigate('Home')}>
-          <Feather name="home" size={20} color={theme.colors.gray[400]} style={{ marginRight: 8 }} />
-          <Text fontFamily={theme.fonts.family.regular} fontSize={14} color={theme.colors.gray[400]}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 32 }}>
-          <Feather name="search" size={20} color={theme.colors.white} style={{ marginRight: 8 }} />
-          <Text fontFamily={theme.fonts.family.bold} fontSize={14} color={theme.colors.white}>Buscar</Text>
-        </TouchableOpacity>
-      </View>
+
     </Styled.Container>
   );
 };
