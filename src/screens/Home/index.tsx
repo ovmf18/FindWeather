@@ -9,6 +9,7 @@ import Text from '../../components/Text';
 import Divider from '../../components/Divider';
 import { FindWeatherAPI } from '../../services/FindWeatherAPI';
 import { storage, CITY_KEY } from '../../utils/storage';
+import { formatCurrentDate } from '../../utils/date';
 import * as Styled from './styles';
 
 import { getWeatherIcon } from '../../utils/weatherIcons';
@@ -58,17 +59,6 @@ const Home = () => {
       };
     }, [])
   );
-
-  const formatCurrentDate = () => {
-    const formatter = new Intl.DateTimeFormat('pt-BR', {
-      weekday: 'long',
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric'
-    });
-    const dateStr = formatter.format(new Date());
-    return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-  };
 
   const renderEmptyState = () => (
     <Styled.EmptyContent>
