@@ -75,7 +75,7 @@ const Home = () => {
         style={{ width: 280, height: 280, marginVertical: 48, resizeMode: 'contain' }}
       />
 
-      <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+      <TouchableOpacity onPress={() => navigation.navigate('SearchTab')}>
         <Text fontFamily={theme.fonts.family.regular} fontSize={16} color={theme.colors.gray[300]} style={{ textDecorationLine: 'underline', marginTop: 16 }} align="center">
           Selecione aqui um local e{'\n'}encontre o clima em tempo real
         </Text>
